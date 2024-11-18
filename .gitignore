@@ -43,3 +43,7 @@ env/
 *.psd
 *.ai
 *.yuv
+
+# Experiments data
+
+experiment_weights/*
