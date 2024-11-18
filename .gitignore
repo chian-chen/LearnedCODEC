@@ -1,9 +1,3 @@
-# experiment folder
-datas/*
-buffer/*
-output/*
-GPT-experiment/*
-
 # macOS
 .DS_Store
 .AppleDouble
@@ -48,3 +42,4 @@ env/
 *.mov
 *.psd
 *.ai
+*.yuv
