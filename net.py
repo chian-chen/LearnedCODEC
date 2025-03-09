@@ -49,7 +49,7 @@ class VideoCompressor(nn.Module):
         prediction = self.warpnet(inputfeature) + warpframe
         return prediction, warpframe
 
-    def forward(self, input_image, referframe, quant_noise_feature=None, quant_noise_z=None, quant_noise_mv=None):
+    def forward(self, input_image, referframe, quant_noise_feature=None, quant_noise_z=None, quant_noise_mv=None, cnt=0):
         estmv = self.opticFlow(input_image, referframe)
         mvfeature = self.mvEncoder(estmv)
         if self.training:
@@ -106,9 +106,7 @@ class VideoCompressor(nn.Module):
                 for i in range(-self.mxrange, self.mxrange):
                     cdfs.append(gaussian.cdf(torch.tensor(i - 0.5)).view(n,c,h,w,1))
                 cdfs = torch.cat(cdfs, 4).cpu().detach()
-                
                 byte_stream = torchac.encode_float_cdf(cdfs, x.cpu().detach().to(torch.int16), check_input_bounds=True)
-
                 real_bits = torch.from_numpy(np.array([len(byte_stream) * 8])).float().cuda()
 
                 sym_out = torchac.decode_float_cdf(cdfs, byte_stream)
@@ -121,10 +119,13 @@ class VideoCompressor(nn.Module):
             gaussian = torch.distributions.laplace.Laplace(mu, sigma)
             probs = gaussian.cdf(feature + 0.5) - gaussian.cdf(feature - 0.5)
             total_bits = torch.sum(torch.clamp(-1.0 * torch.log(probs + 1e-5) / math.log(2.0), 0, 50))
-            
-            if self.calrealbits and not self.training:
-                decodedx, real_bits = getrealbitsg(feature, gaussian)
-                total_bits = real_bits
+
+            np.save(f"./npys/npy_x/x_{cnt}.npy", feature.cpu().numpy())
+            np.save(f"./npys/npy_sigma/sigma_{cnt}.npy", sigma.cpu().numpy())
+
+            # if self.calrealbits and not self.training:
+            #     decodedx, real_bits = getrealbitsg(feature, gaussian)
+            #     total_bits = real_bits
 
             return total_bits, probs
 
@@ -148,10 +149,10 @@ class VideoCompressor(nn.Module):
             prob = self.bitEstimator_z(z + 0.5) - self.bitEstimator_z(z - 0.5)
             total_bits = torch.sum(torch.clamp(-1.0 * torch.log(prob + 1e-5) / math.log(2.0), 0, 50))
 
-
-            if self.calrealbits and not self.training:
-                decodedx, real_bits = getrealbits(z)
-                total_bits = real_bits
+            np.save(f"./npys/npy_z/z_{cnt}.npy", z.cpu().numpy())
+            # if self.calrealbits and not self.training:
+            #     decodedx, real_bits = getrealbits(z)
+            #     total_bits = real_bits
 
             return total_bits, prob
 
@@ -176,9 +177,10 @@ class VideoCompressor(nn.Module):
             total_bits = torch.sum(torch.clamp(-1.0 * torch.log(prob + 1e-5) / math.log(2.0), 0, 50))
 
 
-            if self.calrealbits and not self.training:
-                decodedx, real_bits = getrealbits(mv)
-                total_bits = real_bits
+            # if self.calrealbits and not self.training:
+            #     decodedx, real_bits = getrealbits(mv)
+            #     total_bits = real_bits
+            np.save(f"./npys/npy_mv/mv_{cnt}.npy", mv.cpu().numpy())
 
             return total_bits, prob
 

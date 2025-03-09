@@ -7,8 +7,8 @@
 # parser.add_argument('--epochs', default=1, type=int, help="hyper-parameter: epochs")
 
 python3 main.py --pretrain_weight --ref_dir 'H265L20' --pretrain_weight_path './weights/2048.model' --batch_size 1
-python3 main.py --pretrain_weight --ref_dir 'H265L23' --pretrain_weight_path './weights/1024.model' --batch_size 1
-python3 main.py --pretrain_weight --ref_dir 'H265L26' --pretrain_weight_path './weights/512.model' --batch_size 1
-python3 main.py --pretrain_weight --ref_dir 'H265L29' --pretrain_weight_path './weights/256.model' --batch_size 1
+# python3 main.py --pretrain_weight --ref_dir 'H265L23' --pretrain_weight_path './weights/1024.model' --batch_size 1
+# python3 main.py --pretrain_weight --ref_dir 'H265L26' --pretrain_weight_path './weights/512.model' --batch_size 1
+# python3 main.py --pretrain_weight --ref_dir 'H265L29' --pretrain_weight_path './weights/256.model' --batch_size 1
 
 # python3 main.py --pretrain_weight --pretrain_weight_path './experiment_weights/40000.ckpt' --batch_size 1

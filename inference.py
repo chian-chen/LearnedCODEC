@@ -29,7 +29,7 @@ def inference(model, inference_loader, args, device):
             for i in range(seqlen):
                 input_image = input_images[:, i, :, :, :]
     
-                clipped_recon_image, mse_loss, _, _, _, _, _, bpp = model(input_image, ref_image)
+                clipped_recon_image, mse_loss, _, _, _, _, _, bpp = model(input_image, ref_image, cnt=cnt)
 
                 sumbpp += torch.mean(bpp).cpu().detach().numpy()
                 sumpsnr += torch.mean(10 * (torch.log(1. / mse_loss) / np.log(10))).cpu().detach().numpy()

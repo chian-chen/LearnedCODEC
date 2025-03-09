@@ -14,7 +14,7 @@ def train(model, train_loader, args, device):
     optimizer = torch.optim.Adam(model.parameters(), lr = 1e-4)
     scheduler = CosineAnnealingLR(optimizer=optimizer, T_max=args.epochs * 2, eta_min=0)
 
-    print_step = 5000
+    print_step = 10000
 
     for epoch in range(args.epochs):
         
@@ -59,7 +59,7 @@ def train(model, train_loader, args, device):
 
                 print(f'Train Epoch: {epoch}, psnr:{psnr}, warppsnr: {warppsnr}, interpsnr: {interpsnr}')
 
-                torch.save(model.state_dict(), os.path.join(args.output_weight, f'{batch_idx}.ckpt'))
+                torch.save(model.state_dict(), os.path.join(args.output_weight, f'{epoch}_{batch_idx}.ckpt'))
                 with open(os.path.join(args.output_weight, f'experiment.log'), "a") as f:
                     f.write(f'Train Epoch: {epoch}, Batch_index: {batch_idx}, psnr:{psnr}, warppsnr: {warppsnr}, interpsnr: {interpsnr}\n')
 
