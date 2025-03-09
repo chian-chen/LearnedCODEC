@@ -47,3 +47,4 @@ env/
 # Experiments data
 
 experiment_weights/*
+npys/*
